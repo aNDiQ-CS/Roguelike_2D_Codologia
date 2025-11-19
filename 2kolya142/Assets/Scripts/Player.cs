@@ -86,6 +86,7 @@ public class PlayerController : MonoBehaviour
             _moveInput = Vector2.zero;
 
         _animator.SetBool("IsRunning", _moveInput.x != 0);
+        _animator.SetFloat("YVelocity", _rb.linearVelocityY);
 
         if (_moveInput.x > 0)
             _isFacingRight = true;
