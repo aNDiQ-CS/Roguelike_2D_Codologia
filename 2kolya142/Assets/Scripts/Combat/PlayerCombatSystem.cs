@@ -14,7 +14,7 @@ public class PlayerCombatSystem : MonoBehaviour, IDamageable
         _hp = MaxHealth;
     }
 
-    public void Attack(int damage)
+    public void Attack(IDamageable target, int damage)
     {
         
     }

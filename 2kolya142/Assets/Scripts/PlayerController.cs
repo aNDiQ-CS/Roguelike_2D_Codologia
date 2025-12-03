@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 8f;
+    [SerializeField] private float attackDelay = 0.25f;
 
     [Header("Jump")]
     [SerializeField] private float jumpForce = 12f;
@@ -25,12 +27,16 @@ public class PlayerController : MonoBehaviour
     private PlayerInput _playerInput;
     private InputAction _moveAction;
     private InputAction _jumpAction;
+    private InputAction _attackAction;
     private PlayerCombatSystem _playerCombatSystem;
 
     private Vector2 _moveInput = Vector2.zero;
     private bool _isGrounded = false;
-    private float _lastGroundedTime = -10f;
-    private float _lastJumpPressedTime = -10f;
+    private bool _hasAttacked = false;
+    private bool _canMove = true;
+    private float _lastGroundedTime = 0f;
+    private float _lastJumpPressedTime = 0f;
+    private float _lastAttackTime = 0f;
 
     private bool _isFacingRight = true;
 
@@ -61,12 +67,18 @@ public class PlayerController : MonoBehaviour
         {
             _moveAction = _playerInput.actions["Move"];
             _jumpAction = _playerInput.actions["Jump"];
+            _attackAction = _playerInput.actions["Attack"];
 
             if (_moveAction != null) _moveAction.Enable();
             if (_jumpAction != null)
             {
                 _jumpAction.Enable();
                 _jumpAction.performed += OnJumpPerformed;                             
+            }
+            if (_attackAction != null)
+            {
+                _attackAction.Enable();
+                _attackAction.performed += OnAttackPerformed;
             }
         }
     }
@@ -79,6 +91,11 @@ public class PlayerController : MonoBehaviour
             _jumpAction.Disable();
         }
         if (_moveAction != null) _moveAction.Disable();
+        if (_attackAction != null)
+        {
+            _attackAction.Disable();
+            _attackAction.performed -= OnAttackPerformed;
+        }
     }
 
     private void Update()
@@ -114,22 +131,31 @@ public class PlayerController : MonoBehaviour
             if (_isGrounded)
                 _lastGroundedTime = Time.time;
         }
+
+        if (_hasAttacked && Time.time - _lastAttackTime > attackDelay)
+        {
+            _hasAttacked = false;
+            _canMove = true;
+        }
     }
 
     private void FixedUpdate()
     {
-        Vector2 linearVelocity = _rb.linearVelocity;
-        linearVelocity.x = _moveInput.x * moveSpeed;
-        _rb.linearVelocity = linearVelocity;
-
-        bool canUseCoyote = (Time.time - _lastGroundedTime) <= coyoteTime;
-        bool hasBufferedJump = (Time.time - _lastJumpPressedTime) <= jumpBufferTime;
-
-        if (hasBufferedJump && canUseCoyote)
+        if (_canMove)
         {
-            DoJump();
-            _lastJumpPressedTime = -10f; //                
-        }
+            Vector2 linearVelocity = _rb.linearVelocity;
+            linearVelocity.x = _moveInput.x * moveSpeed;
+            _rb.linearVelocity = linearVelocity;
+
+            bool canUseCoyote = (Time.time - _lastGroundedTime) <= coyoteTime;
+            bool hasBufferedJump = (Time.time - _lastJumpPressedTime) <= jumpBufferTime;
+
+            if (hasBufferedJump && canUseCoyote)
+            {
+                DoJump();
+                _lastJumpPressedTime = -10f;                 
+            }
+        }                
     }
 
     private void OnJumpPerformed(InputAction.CallbackContext ctx)
@@ -139,8 +165,19 @@ public class PlayerController : MonoBehaviour
 
     private void DoJump()
     {
-        _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        _playerCombatSystem.GetDamage(_playerCombatSystem.Damage);
+        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0f);
+        _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);        
+    }
+    private void OnAttackPerformed(InputAction.CallbackContext context)
+    {
+        if (_isGrounded && !_hasAttacked)
+        {
+            _hasAttacked = true;
+            _canMove = false;
+            _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+            _lastAttackTime = Time.time;
+            _animator.SetTrigger("AttackTrigger");
+        }
     }
 
     private void OnDrawGizmosSelected()
