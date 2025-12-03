@@ -134,6 +134,7 @@ public class PlayerController : MonoBehaviour
 
         if (_hasAttacked && Time.time - _lastAttackTime > attackDelay)
         {
+            _playerCombatSystem.DeactivateSword();
             _hasAttacked = false;
             _canMove = true;
         }
@@ -172,6 +173,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_isGrounded && !_hasAttacked)
         {
+            _playerCombatSystem.ActivateSword();
             _hasAttacked = true;
             _canMove = false;
             _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
