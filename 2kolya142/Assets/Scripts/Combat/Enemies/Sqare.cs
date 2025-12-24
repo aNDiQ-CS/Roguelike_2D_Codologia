@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class Sqare : Enemy
 {
+    [SerializeField] private EnemyData _enemyData;
     public override int MaxHealth { get => _maxHealth; set => _maxHealth = value; }
-    public override int Damage { get => _damage; set => _damage = value; }    
+    public override int Damage { get => _enemyData.Damage; set => _damage = value; }    
 
     public override void Attack(IDamageable target, int damage)
     {
