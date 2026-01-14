@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66e27422661150a4080d95bbc9f574b5, type: 3}
   m_Name: Zombie
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  _name: 
-  _health: 0
-  _armor: 0
-  _speed: 0
-  _damage: 0
-  _attackRange: 0
-  _attackDelay: 0
-  _attackTime: 0
+  _name: Zombie
+  _health: 50
+  _armor: 1
+  _speed: 5
+  _damage: 10
+  _attackRange: 1
+  _attackDelay: 5
+  _attackTime: 0.5
   _state: 0
