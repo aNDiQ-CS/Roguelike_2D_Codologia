@@ -19,5 +19,6 @@ MonoBehaviour:
   _damage: 10
   _attackRange: 1
   _attackDelay: 5
+  _patrolingDelay: 5
   _attackTime: 0.5
   _state: 0
