@@ -33,18 +33,48 @@ public class Sqare : Enemy
 
     private void Update()
     {
-        OnPatroling();
+        CheckState();
+    }
+
+    public override void CheckState()
+    {
+        var triggerCast = Physics2D.CircleCast(transform.position, _enemyData.TriggerRadius, Vector2.zero, float.PositiveInfinity, 1<<6);
+        if (triggerCast)
+        {
+            OnPursue(triggerCast.transform);
+        }
+        else
+        {
+            OnPatroling();
+        }
+    }
+
+    public override void OnPursue(Transform target)
+    {
+        Vector3 currentPos = transform.position;
+        transform.position = Vector3.MoveTowards(currentPos, target.position, _enemyData.Speed * Time.deltaTime);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.position, _enemyData.TriggerRadius);
     }
 
     public override void OnPatroling()
-    {
-        float distance = Vector3.Distance(transform.position, _patrolingPoints[_patrolingIndex].position);
-
+    {        
         if (_isMoving)
         {
             Vector3 currentPos = transform.position;
-            Vector3 nextPos = _patrolingPoints[(_patrolingIndex + 1) % _patrolingPoints.Length].position;
-            transform.position = Vector3.Lerp(currentPos, nextPos, _enemyData.Speed * Time.deltaTime);
+            Vector3 nextPos = _patrolingPoints[(_patrolingIndex)].position;
+            transform.position = Vector3.MoveTowards(currentPos, nextPos, _enemyData.Speed * Time.deltaTime);
+            
+            float distance = Vector3.Distance(currentPos, nextPos);
+
+            if (distance < 0.001f)
+            {
+                _isMoving = false;
+            }
         }
         else
         {

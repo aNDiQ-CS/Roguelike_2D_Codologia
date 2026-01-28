@@ -10,6 +10,7 @@ public class EnemyData : ScriptableObject
 
     [Header("Attack")]
     [SerializeField][Min(0)] private int _damage;
+    [SerializeField][Min(0)] private float _triggerRadius;
     [SerializeField][Min(0)] private float _attackRange;
     [SerializeField][Min(0)] private float _attackDelay;
     [SerializeField][Min(0)] private float _patrolingDelay;
@@ -21,6 +22,7 @@ public class EnemyData : ScriptableObject
     public int Health => _health;
     public int Armor => _armor;
     public float Speed => _speed;
+    public float TriggerRadius => _triggerRadius;
     public float AttackRange => _attackRange;
     public float AttackDelay => _attackDelay;
     public float PatrolingDelay => _patrolingDelay;    

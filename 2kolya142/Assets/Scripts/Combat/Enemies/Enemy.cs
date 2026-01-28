@@ -19,10 +19,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         _currentSpeed = _enemyData.Speed;
         _state = EnemyState.Idle;
     }
-
+    public virtual void CheckState() { }
     public virtual void OnIdle() { }
     public virtual void OnPatroling() { }
-    public virtual void OnPursue() { }
+    public virtual void OnPursue(Transform target) { }
     public virtual void OnAttacking() { }
     public virtual void OnDeath() { }
 }

@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private float scale = 10;
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 8f;
     [SerializeField] private float attackDelay = 0.25f;
@@ -113,7 +115,15 @@ public class PlayerController : MonoBehaviour
         else if (_moveInput.x < 0)
             _isFacingRight = false;
 
-        _spriteRenderer.flipX = !_isFacingRight;
+        //_spriteRenderer.flipX = !_isFacingRight;
+        if (_isFacingRight)
+        {
+            transform.localScale = new Vector3(scale, scale, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(-scale, scale, 1);
+        }
 
         /*if (_moveInput != Vector2.zero)
         {
