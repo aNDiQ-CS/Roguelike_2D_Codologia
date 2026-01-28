@@ -15,8 +15,9 @@ MonoBehaviour:
   _name: Zombie
   _health: 50
   _armor: 1
-  _speed: 5
+  _speed: 2
   _damage: 10
+  _triggerRadius: 2
   _attackRange: 1
   _attackDelay: 5
   _patrolingDelay: 5
