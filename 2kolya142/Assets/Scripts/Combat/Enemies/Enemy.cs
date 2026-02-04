@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDamageable
@@ -8,6 +9,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected int _dmg;
     protected float _currentSpeed;
     protected EnemyState _state;
+
+    public event Action<float> Damaged;
+
     public abstract void Attack(IDamageable target, int damage);
 
     public abstract void GetDamage(int damage);

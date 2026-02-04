@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerCombatSystem : MonoBehaviour, IDamageable
@@ -11,6 +12,8 @@ public class PlayerCombatSystem : MonoBehaviour, IDamageable
     [SerializeField] private int _damage;
     private int _hp;
 
+    public event Action<float> Damaged;
+
     private void Awake()
     {
         _hp = MaxHealth;
@@ -22,8 +25,9 @@ public class PlayerCombatSystem : MonoBehaviour, IDamageable
     }
 
     public void GetDamage(int damage)
-    {
+    {        
         _hp -= damage;
+        Damaged?.Invoke(_hp / (float)MaxHealth);
         Debug.Log(_hp);
         if (_hp <= 0)
         {
