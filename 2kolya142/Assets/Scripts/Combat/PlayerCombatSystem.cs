@@ -13,6 +13,7 @@ public class PlayerCombatSystem : MonoBehaviour, IDamageable
     private int _hp;
 
     public event Action<float> Damaged;
+    public event Action Died;
 
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class PlayerCombatSystem : MonoBehaviour, IDamageable
         if (_hp <= 0)
         {
             Debug.Log("Player is dead!");
+            Died?.Invoke();
         }
     }
 

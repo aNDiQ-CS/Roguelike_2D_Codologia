@@ -65,6 +65,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        _playerCombatSystem.Died += OnDied;
         if (_playerInput != null && _playerInput.actions != null)
         {
             _moveAction = _playerInput.actions["Move"];
@@ -83,7 +84,7 @@ public class PlayerController : MonoBehaviour
                 _attackAction.performed += OnAttackPerformed;
             }
         }
-    }
+    }   
 
     private void OnDisable()
     {
@@ -191,7 +192,11 @@ public class PlayerController : MonoBehaviour
             _animator.SetTrigger("AttackTrigger");
         }
     }
-
+    private void OnDied()
+    {
+        _animator.SetTrigger("DeathTrigger");
+        Destroy(this);
+    }
     private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
