@@ -11,10 +11,20 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected EnemyState _state;
 
     public event Action<float> Damaged;
+    public event Action Died;
 
     public abstract void Attack(IDamageable target, int damage);
 
-    public abstract void GetDamage(int damage);
+    public virtual void GetDamage(int damage)
+    {
+        _hp -= damage;
+        Damaged?.Invoke(_hp / (float)_enemyData.Health);
+        if (_hp <= 0)
+        {
+            Died?.Invoke();
+            Destroy(gameObject);
+        }
+    }
 
     private void Awake()
     {

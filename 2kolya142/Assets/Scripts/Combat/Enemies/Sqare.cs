@@ -15,12 +15,8 @@ public class Sqare : Enemy
 
     public override void GetDamage(int damage)
     {
-        Debug.Log("Кубику болльно и обидно :(");
-        _hp -= damage;
-        if (_hp <= 0)
-        {
-            Destroy(gameObject);
-        }
+        Debug.Log("Кубику болльно и обидно :("); 
+        base.GetDamage(damage);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -53,12 +49,6 @@ public class Sqare : Enemy
     {
         Vector3 currentPos = transform.position;
         transform.position = Vector3.MoveTowards(currentPos, target.position, _enemyData.Speed * Time.deltaTime);
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(transform.position, _enemyData.TriggerRadius);
     }
 
     public override void OnPatroling()
